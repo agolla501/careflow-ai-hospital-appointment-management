@@ -1,6 +1,12 @@
 # CareFlow AI
 
 
+## Live Application
+
+🚀 **[Launch CareFlow AI](https://careflow-ai-hospital-appointment-management-rj5wgpjun4pfaehict.streamlit.app)**
+
+CareFlow AI is deployed on Streamlit Community Cloud and can be tested using synthetic appointment data.
+
 ## Application Screenshots
 
 ### Appointment Dashboard
@@ -66,3 +72,9 @@ flowchart TD
 
     H --> I[Human Staff Review]
     I --> J[Update Appointment Status]
+
+
+## Project Links
+
+- 🌐 [Live CareFlow AI Application](https://careflow-ai-hospital-appointment-management-rj5wgpjun4pfaehict.streamlit.app)
+- 💻 [GitHub Repository](https://github.com/agolla501/careflow-ai-hospital-appointment-management)
