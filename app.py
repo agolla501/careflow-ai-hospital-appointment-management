@@ -8,7 +8,7 @@ from pathlib import Path
 import streamlit as st
 
 from dotenv import load_dotenv
-from openai import OpenAI
+from google import genai
 
 
 # --------------------------------------------
@@ -21,7 +21,7 @@ DB_PATH = BASE_DIR / "appointments.db"
 
 load_dotenv(BASE_DIR / ".env")
 
-AI_AVAILABLE = bool(os.getenv("OPENAI_API_KEY"))
+AI_AVAILABLE = bool(os.getenv("GEMINI_API_KEY"))
 
 st.set_page_config(
     page_title="CareFlow AI",
@@ -193,9 +193,7 @@ def generate_reminder(appointment):
 
     department = appointment["department"]
 
-    # Free demonstration mode:
-    # Generate a fixed reminder template.
-
+    # If Gemini is not configured, use a normal template.
     if not AI_AVAILABLE:
 
         return (
@@ -208,37 +206,40 @@ def generate_reminder(appointment):
             "Thank you."
         )
 
-    # AI mode:
-    # Only the department and appointment time are
-    # included in the request to the LLM.
-
-    client = OpenAI()
-
-    response = client.responses.create(
-        model="gpt-4.1-mini",
-        instructions=(
-            "You write short, professional appointment "
-            "reminder drafts for a fictional hospital "
-            "scheduling demonstration. "
-            "Use only the supplied appointment details. "
-            "Do not invent phone numbers, addresses, "
-            "medical information, or hospital policies. "
-            "Do not claim the appointment is confirmed. "
-            "Do not include patient names or identifiers. "
-            "Do not include links. "
-            "Politely ask the recipient to contact "
-            "the scheduling team to confirm or "
-            "request a change. "
-            "Return only the reminder message."
-        ),
-        input=(
-            f"Department: {department}\n"
-            f"Appointment date and local time: {formatted_time}\n"
-            "Write a concise appointment reminder."
-        )
+    # Gemini AI client
+    client = genai.Client(
+        api_key=os.getenv("GEMINI_API_KEY")
     )
 
-    return response.output_text
+    prompt = f"""
+You write short, professional appointment reminder drafts
+for a fictional hospital scheduling demonstration.
+
+Use only the supplied appointment details.
+
+Department: {department}
+Appointment date and local time: {formatted_time}
+
+Rules:
+- Do not invent phone numbers, addresses, medical information,
+  or hospital policies.
+- Do not claim the appointment is already confirmed.
+- Do not include patient names or identifiers.
+- Do not provide medical advice.
+- Politely ask the recipient to contact the scheduling team
+  to confirm or request a change.
+- Keep the reminder concise and professional.
+
+Return only the reminder message.
+"""
+
+    response = client.models.generate_content(
+        model="gemini-3.5-flash-lite",
+        contents=prompt
+    )
+
+    return response.text
+
 
 
 # --------------------------------------------
@@ -595,11 +596,11 @@ for appointment in appointments:
 
                 except Exception as error:
 
+
                     st.error(
-                        "Reminder generation failed. "
-                        "Check your API key, model access, "
-                        "and available API credit."
-                    )
+                        "AI reminder generation is temporarily unavailable. "
+                        "Please verify the API configuration and try again."
+                   )
 
                     st.caption(str(error))
 
