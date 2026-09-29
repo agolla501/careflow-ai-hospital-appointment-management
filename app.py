@@ -294,14 +294,14 @@ if AI_AVAILABLE:
 
     st.success(
         "AI mode is enabled. "
-        "Reminder drafts will use the OpenAI API."
+        "Reminder drafts are generated using Google Gemini."
     )
 
 else:
 
     st.info(
         "Template mode is enabled. "
-        "Add an OpenAI API key to your .env file "
+        "Add an Google Gemini API key to your .env file "
         "to enable AI-generated reminder drafts."
     )
 
