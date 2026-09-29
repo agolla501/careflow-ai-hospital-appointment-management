@@ -1,54 +1,68 @@
-
 # CareFlow AI
 
-## AI-Powered Hospital Appointment Management
 
-CareFlow AI is an independent healthcare AI engineering
-portfolio project built using Python, Streamlit, SQLite,
-and the OpenAI API.
+## Application Screenshots
+
+### Appointment Dashboard
+![CareFlow AI Dashboard](screenshots/dashboard.png)
+
+### Appointment Follow-Up
+![Appointment Follow-Up](screenshots/needs-confirmation.png)
+
+### Gemini AI Reminder Generation
+![AI Reminder](screenshots/ai-reminder.png)
+
+
+## AI-Powered Hospital Appointment Management & Follow-Up Automation
+
+CareFlow AI is an independent AI Engineering portfolio project designed to demonstrate how Generative AI can support hospital appointment confirmation workflows.
+
+The system identifies upcoming appointments that still require confirmation, flags them for staff follow-up, and generates professional reminder drafts using Google Gemini.
+
+> This project uses synthetic appointment data only and is not connected to a real hospital or patient system.
+
+---
 
 ## Problem
 
-Hospital scheduling teams need to identify upcoming
-appointments that have not yet been confirmed and
-prepare appropriate confirmation reminders.
+Hospital scheduling teams may manage large numbers of appointments every day.
+
+Appointments that remain unconfirmed close to their scheduled time can require additional staff follow-up.
+
+Manually reviewing schedules and preparing reminder messages can become repetitive and time-consuming.
+
+---
 
 ## Solution
 
-CareFlow AI provides an appointment management dashboard
-that identifies unconfirmed appointments within a
-24-hour follow-up window and generates reminder drafts
-using Generative AI.
+CareFlow AI automates the basic appointment follow-up workflow.
 
-## Features
+The application:
 
-- Appointment registration
-- SQLite database integration
-- Automatic appointment follow-up checks
-- AI-generated reminder drafts
-- Confirmation status management
-- Interactive scheduling dashboard
+- Registers fictional hospital appointments
+- Stores appointment information in SQLite
+- Detects appointments that require confirmation
+- Applies time-based follow-up rules using Python
+- Generates reminder drafts using Google Gemini
+- Allows staff to review AI-generated messages
+- Tracks Pending, Confirmed, and Cancelled appointment statuses
+- Provides an interactive Streamlit dashboard
 
-## Technologies
+---
 
-Python, Streamlit, SQLite, OpenAI API, Generative AI
+## Architecture
 
-## Run Locally
+```mermaid
+flowchart TD
+    A[Appointment Registration] --> B[SQLite Database]
+    B --> C[Python Follow-Up Engine]
+    C --> D{Confirmation Required?}
 
-1. Install Python.
-2. Install the libraries in requirements.txt.
-3. Optionally configure an OpenAI API key in .env.
-4. Run:
+    D -->|No| E[Upcoming / Confirmed]
+    D -->|Yes| F[Needs Confirmation Queue]
 
-   python -m streamlit run app.py
+    F --> G[Google Gemini]
+    G --> H[AI Reminder Draft]
 
-5. Click "Load three fictional appointments"
-   to create sample data.
-
-## Important
-
-This project uses fictional appointment data.
-
-It is not connected to a real hospital,
-does not send patient notifications,
-and does not make medical decisions.
+    H --> I[Human Staff Review]
+    I --> J[Update Appointment Status]
